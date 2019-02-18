@@ -33,16 +33,36 @@ class Server
      * Server constructor.
      *
      * @param Application $application
+     * @param int|null $host
+     * @param int|null $port
      */
-    public function __construct(Application $application)
+    public function __construct(Application $application, $host = null, $port = null)
     {
         $application->register(new SwooleServiceProvider());
 
         $server = config()->get('server.class', HTTPServer::class);
 
+        if(null !== $host && null !== $port) {
+            $serverHost = $host.':'.$port;
+        }
+        else {
+            $defaultHost = config()->get('server.host');
+            $defaultComponents = parse_url($defaultHost);
+
+            if(null !== $host) {
+                $serverHost = $host.':'.(isset($defaultComponents['port']) ? $defaultComponents['port'] : 9999);
+            }
+            elseif(null !== $port) {
+                $serverHost = (isset($defaultComponents['host']) ? $defaultComponents['host'] : '127.0.0.1').':'.$port;
+            }
+            else {
+                $serverHost = $defaultHost;
+            }
+        }
+
         $this->server = $server::createServer(
             $application->getName(),
-            config()->get('server.host'),
+            $serverHost,
             config()->get('server.options', [])
         );
 

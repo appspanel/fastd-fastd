@@ -45,6 +45,8 @@ $input = new ArgvInput(null, new InputDefinition([
     new InputArgument('action', InputArgument::OPTIONAL, 'The server action', 'status'),
     new InputOption('daemon', 'd', InputOption::VALUE_NONE, 'Do not ask any interactive question'),
     new InputOption('t', 't', InputOption::VALUE_OPTIONAL, 'Web root relative path'),
+    new InputOption('host', null, InputOption::VALUE_REQUIRED, 'Server\'s host'),
+    new InputOption('port', null, InputOption::VALUE_REQUIRED, 'Server\'s port'),
 ]));
 
 $path = $input->getOption('t');
@@ -52,6 +54,10 @@ if (!$path) {
     $path = file_exists('./app') ? './app' : getcwd();
 }
 
-$server = new Server(new Application($path, Application::MODE_SWOOLE));
+$server = new Server(
+    new Application($path, Application::MODE_SWOOLE),
+    $input->getOption('host'),
+    $input->getOption('port')
+);
 
 $server->run($input);
