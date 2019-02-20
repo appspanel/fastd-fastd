@@ -47,6 +47,7 @@ $input = new ArgvInput(null, new InputDefinition([
     new InputOption('t', 't', InputOption::VALUE_OPTIONAL, 'Web root relative path'),
     new InputOption('host', null, InputOption::VALUE_REQUIRED, 'Server\'s host'),
     new InputOption('port', null, InputOption::VALUE_REQUIRED, 'Server\'s port'),
+    new InputOption('pid', null, InputOption::VALUE_REQUIRED, 'Server\'s PID file'),
 ]));
 
 $path = $input->getOption('t');
