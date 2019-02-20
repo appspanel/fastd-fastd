@@ -33,15 +33,18 @@ class Server
      * Server constructor.
      *
      * @param Application $application
-     * @param int|null $host
-     * @param int|null $port
+     * @param int|null $host Server's host.
+     * @param int|null $port Server's port.
+     * @param string|null $pidFile PID file's path.
      */
-    public function __construct(Application $application, $host = null, $port = null)
+    public function __construct(Application $application, $host = null, $port = null, $pidFile = null)
     {
         $application->register(new SwooleServiceProvider());
 
         $server = config()->get('server.class', HTTPServer::class);
+        $serverOptions = config()->get('server.options', []);
 
+        // Compute host and port from CLI and default options
         if(null !== $host && null !== $port) {
             $serverHost = $host.':'.$port;
         }
@@ -60,10 +63,15 @@ class Server
             }
         }
 
+        // Compute PID file
+        if(null !== $pidFile) {
+            $serverOptions['pid_file'] = $pidFile;
+        }
+
         $this->server = $server::createServer(
             $application->getName(),
             $serverHost,
-            config()->get('server.options', [])
+            $serverOptions
         );
 
         $application->add('server', $this->server);
