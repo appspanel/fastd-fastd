@@ -32,12 +32,10 @@ class Server
     /**
      * Server constructor.
      *
-     * @param Application $application
-     * @param int|null $host Server's host.
-     * @param int|null $port Server's port.
-     * @param string|null $pidFile PID file's path.
+     * @param Application $application The application.
+     * @param array $options Options to manipulate the server.
      */
-    public function __construct(Application $application, $host = null, $port = null, $pidFile = null)
+    public function __construct(Application $application, array $options = [])
     {
         $application->register(new SwooleServiceProvider());
 
@@ -45,18 +43,18 @@ class Server
         $serverOptions = config()->get('server.options', []);
 
         // Compute host and port from CLI and default options
-        if(null !== $host && null !== $port) {
-            $serverHost = $host.':'.$port;
+        if(!empty($options['host']) && !empty($options['port'])) {
+            $serverHost = $options['host'].':'.$options['port'];
         }
         else {
             $defaultHost = config()->get('server.host');
             $defaultComponents = parse_url($defaultHost);
 
-            if(null !== $host) {
-                $serverHost = $host.':'.(isset($defaultComponents['port']) ? $defaultComponents['port'] : 9999);
+            if(!empty($options['host'])) {
+                $serverHost = $options['host'].':'.(isset($defaultComponents['port']) ? $defaultComponents['port'] : 9999);
             }
-            elseif(null !== $port) {
-                $serverHost = (isset($defaultComponents['host']) ? $defaultComponents['host'] : '127.0.0.1').':'.$port;
+            elseif(!empty($options['port'])) {
+                $serverHost = (isset($defaultComponents['host']) ? $defaultComponents['host'] : '127.0.0.1').':'.$options['port'];
             }
             else {
                 $serverHost = $defaultHost;
@@ -64,12 +62,12 @@ class Server
         }
 
         // Compute PID file
-        if(null !== $pidFile) {
-            $serverOptions['pid_file'] = $pidFile;
+        if(!empty($options['pid_file'])) {
+            $serverOptions['pid_file'] = $options['pid_file'];
         }
 
         $this->server = $server::createServer(
-            $application->getName(),
+            $application->getName().(!empty($options['name_suffix']) ? '-'.$options['name_suffix'] : ''),
             $serverHost,
             $serverOptions
         );
