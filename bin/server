@@ -48,6 +48,7 @@ $input = new ArgvInput(null, new InputDefinition([
     new InputOption('host', null, InputOption::VALUE_REQUIRED, 'Server\'s host'),
     new InputOption('port', null, InputOption::VALUE_REQUIRED, 'Server\'s port'),
     new InputOption('pid', null, InputOption::VALUE_REQUIRED, 'Server\'s PID file'),
+    new InputOption('name-suffix', null, InputOption::VALUE_REQUIRED, 'Server name\'s suffix'),
 ]));
 
 $path = $input->getOption('t');
@@ -57,8 +58,12 @@ if (!$path) {
 
 $server = new Server(
     new Application($path, Application::MODE_SWOOLE),
-    $input->getOption('host'),
-    $input->getOption('port')
+    [
+        'host'        => $input->getOption('host'),
+        'port'        => $input->getOption('port'),
+        'pid_file'    => $input->getOption('pid'),
+        'name_suffix' => $input->getOption('name-suffix'),
+    ]
 );
 
 $server->run($input);
