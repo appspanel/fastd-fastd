@@ -32,9 +32,9 @@
         "fastd/middleware": "^1.0",
         "fastd/config": "^3.2",
         "fastd/routing": "^3.0",
-        "fastd/swoole": "^2.0",
+        "fastd/swoole": "2.0.4.1",
         "fastd/testing": "^0.3",
-        "fastd/migration": "0.1.1.1",
+        "fastd/migration": "0.1.1.2",
         "fastd/query-builder": "^2.0",
         "catfan/medoo": "^1.2",
         "symfony/cache": "^6.0",
@@ -56,6 +56,11 @@
             "name": "fastd/migration",
             "type": "vcs",
             "url": "https://github.com/appspanel/migration.git"
+        },
+        {
+            "name": "fastd/swoole",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/swoole.git"
         }
     ]
 }
