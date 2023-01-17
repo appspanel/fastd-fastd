@@ -34,7 +34,7 @@
         "fastd/routing": "^3.0",
         "fastd/swoole": "^2.0",
         "fastd/testing": "^0.3",
-        "fastd/migration": "^0.1",
+        "fastd/migration": "0.1.1.1",
         "fastd/query-builder": "^2.0",
         "catfan/medoo": "^1.2",
         "symfony/cache": "^6.0",
@@ -50,5 +50,12 @@
         "bin/client",
         "bin/server",
         "bin/process"
+    ],
+    "repositories": [
+        {
+            "name": "fastd/migration",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/migration.git"
+        }
     ]
 }
