@@ -19,10 +19,8 @@ use FastD\Http\Response;
 use FastD\Http\ServerRequest;
 use FastD\Logger\Logger;
 use FastD\ServiceProvider\ConfigServiceProvider;
-use FastD\Utils\EnvironmentObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 /**
@@ -160,10 +158,8 @@ class Application extends Container
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return Response|\Symfony\Component\HttpFoundation\Response
-     *
-     * @throws Exception
+     * @throws \Throwable
      */
     public function handleRequest(ServerRequestInterface $request)
     {
@@ -171,11 +167,7 @@ class Application extends Container
             $this->add('request', $request);
 
             return $this->get('dispatcher')->dispatch($request);
-        } catch (Exception $exception) {
-            return $this->handleException($exception);
         } catch (Throwable $exception) {
-            $exception = new FatalThrowableError($exception);
-
             return $this->handleException($exception);
         }
     }
@@ -189,21 +181,15 @@ class Application extends Container
     }
 
     /**
-     * @param $e
-     *
-     * @return Response
-     *
-     * @throws FatalThrowableError
+     * @param \Throwable $e
+     * @return \FastD\Http\Response
+     * @throws \Throwable
      */
-    public function handleException($e)
+    public function handleException(Throwable $e)
     {
-        if (!$e instanceof Exception) {
-            $e = new FatalThrowableError($e);
-        }
-
         try {
             $trace = call_user_func(config()->get('exception.log'), $e);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             $trace = [
                 'original' => explode("\n", $e->getTraceAsString()),
                 'handler' => explode("\n", $exception->getTraceAsString()),
@@ -222,12 +208,13 @@ class Application extends Container
             $status = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        $resposne = json(call_user_func(config()->get('exception.response'), $e), $status);
+        $response = json(call_user_func(config()->get('exception.response'), $e), $status);
+
         if (!$this->isBooted()) {
-            $this->handleResponse($resposne);
+            $this->handleResponse($response);
         }
 
-        return $resposne;
+        return $response;
     }
 
     /**
