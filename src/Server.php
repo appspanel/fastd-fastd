@@ -11,7 +11,6 @@ namespace FastD;
 
 use FastD\ServiceProvider\SwooleServiceProvider;
 use FastD\Servitization\Server\HTTPServer;
-use swoole_server;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -79,7 +78,7 @@ class Server
     }
 
     /**
-     * @return swoole_server
+     * @return \Swoole\Server
      */
     public function getSwoole()
     {
@@ -212,7 +211,7 @@ class Server
                 break;
             case 'restart':
                 $this->restart();
-                
+
                 break;
             case 'status':
             default:

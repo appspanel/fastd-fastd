@@ -13,8 +13,8 @@ use FastD\Http\ServerRequest;
 use FastD\Packet\Json;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\WebSocket;
-use swoole_server;
-use swoole_websocket_frame;
+use Swoole\Server as SwooleServer;
+use Swoole\WebSocket\Frame as SwooleFrame;
 
 /**
  * Class WebSocketServer.
@@ -24,15 +24,15 @@ class WebSocketServer extends WebSocket
     use OnWorkerStart;
 
     /**
-     * @param swoole_server          $server
-     * @param swoole_websocket_frame $frame
+     * @param \Swoole\Server          $server
+     * @param \Swoole\WebSocket\Frame $frame
      *
      * @return int|mixed
      *
      * @throws \Exception
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public function doMessage(swoole_server $server, swoole_websocket_frame $frame)
+    public function doMessage(SwooleServer $server, SwooleFrame $frame)
     {
         $data = $frame->data;
         $data = Json::decode($data);

@@ -13,7 +13,7 @@ use FastD\Http\ServerRequest;
 use FastD\Packet\Json;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\TCP;
-use swoole_server;
+use Swoole\Server as SwooleServer;
 
 /**
  * Class TCPServer.
@@ -23,7 +23,7 @@ class TCPServer extends TCP
     use OnWorkerStart;
 
     /**
-     * @param swoole_server $server
+     * @param \Swoole\Server $server
      * @param $fd
      * @param $data
      * @param $from_id
@@ -33,7 +33,7 @@ class TCPServer extends TCP
      * @throws \Exception
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public function doWork(swoole_server $server, $fd, $data, $from_id)
+    public function doWork(SwooleServer $server, $fd, $data, $from_id)
     {
         if ('quit' === $data) {
             $server->close($fd);

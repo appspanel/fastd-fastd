@@ -11,7 +11,7 @@ namespace FastD\Servitization\Server;
 
 use FastD\Application;
 use FastD\Swoole\Server\TCP;
-use swoole_server;
+use Swoole\Server as SwooleServer;
 
 /**
  * Class MonitorStatusServer.
@@ -19,24 +19,24 @@ use swoole_server;
 class ManagerServer extends TCP
 {
     /**
-     * @param swoole_server $server
+     * @param \Swoole\Server $server
      * @param $fd
      * @param $from_id
      */
-    public function doConnect(swoole_server $server, $fd, $from_id)
+    public function doConnect(SwooleServer $server, $fd, $from_id)
     {
         $server->send($fd, sprintf('server: %s %s', app()->getName(), Application::VERSION).PHP_EOL);
     }
 
     /**
-     * @param swoole_server $server
+     * @param \Swoole\Server $server
      * @param $fd
      * @param $data
      * @param $from_id
      *
      * @return mixed
      */
-    public function doWork(swoole_server $server, $fd, $data, $from_id)
+    public function doWork(SwooleServer $server, $fd, $data, $from_id)
     {
         switch (trim($data)) {
             case 'quit':

@@ -14,8 +14,8 @@ use FastD\Http\SwooleServerRequest;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\HTTP;
 use Psr\Http\Message\ServerRequestInterface;
-use swoole_http_request;
-use swoole_http_response;
+use Swoole\Http\Request as SwooleRequest;
+use Swoole\Http\Response as SwooleResponse;
 
 /**
  * Class HTTPServer.
@@ -25,12 +25,12 @@ class HTTPServer extends HTTP
     use OnWorkerStart;
 
     /**
-     * @param swoole_http_request  $swooleRequet
-     * @param swoole_http_response $swooleResponse
+     * @param \Swoole\Http\Request  $swooleRequet
+     * @param \Swoole\Http\Response $swooleResponse
      *
      * @return int
      */
-    public function onRequest(swoole_http_request $swooleRequet, swoole_http_response $swooleResponse)
+    public function onRequest(SwooleRequest $swooleRequet, SwooleResponse $swooleResponse)
     {
         $request = SwooleServerRequest::createServerRequestFromSwoole($swooleRequet);
 

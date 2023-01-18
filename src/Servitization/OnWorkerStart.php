@@ -10,7 +10,7 @@
 namespace FastD\Servitization;
 
 use FastD\Pool\PoolInterface;
-use swoole_server;
+use Swoole\Server as SwooleServer;
 
 /**
  * Trait OnWorkerStart.
@@ -18,10 +18,10 @@ use swoole_server;
 trait OnWorkerStart
 {
     /**
-     * @param swoole_server $server
+     * @param \Swoole\Server $server
      * @param int           $worker_id
      */
-    public function onWorkerStart(swoole_server $server, $worker_id)
+    public function onWorkerStart(SwooleServer $server, $worker_id)
     {
         parent::onWorkerStart($server, $worker_id);
 

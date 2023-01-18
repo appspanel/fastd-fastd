@@ -13,7 +13,7 @@ use FastD\Http\ServerRequest;
 use FastD\Packet\Json;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\UDP;
-use swoole_server;
+use Swoole\Server as SwooleServer;
 
 /**
  * Class UDPServer.
@@ -23,7 +23,7 @@ class UDPServer extends UDP
     use OnWorkerStart;
 
     /**
-     * @param swoole_server $server
+     * @param \Swoole\Server $server
      * @param $data
      * @param $clientInfo
      *
@@ -32,7 +32,7 @@ class UDPServer extends UDP
      * @throws \Exception
      * @throws \FastD\Packet\Exceptions\PacketException
      */
-    public function doPacket(swoole_server $server, $data, $clientInfo)
+    public function doPacket(SwooleServer $server, $data, $clientInfo)
     {
         $data = Json::decode($data);
         $request = new ServerRequest($data['method'], $data['path']);
