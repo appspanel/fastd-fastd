@@ -10,11 +10,11 @@
 namespace Processor;
 
 use FastD\Process\AbstractProcess;
-use swoole_process;
+use Swoole\Process;
 
 class DemoProcessor extends AbstractProcess
 {
-    public function handle(swoole_process $swoole_process)
+    public function handle(Process $swoole_process)
     {
         timer_tick(1000, function ($id) {
             static $index = 0;

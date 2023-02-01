@@ -9,9 +9,9 @@
 
 namespace FastD\Model;
 
-use Exception;
 use Medoo\Medoo;
 use PDO;
+use Throwable;
 
 /**
  * Class Database.
@@ -53,34 +53,58 @@ class Database extends Medoo
         $this->__construct($this->config);
     }
 
-
     /**
      * @param $query
+     * @param array $map
      * @return bool|false|\PDOStatement
      */
-    public function query($query)
+    public function query($query, $map = [])
     {
-        try {
+        if(empty($map)) {
             return $this->pdo->query($query);
-        } catch (Exception $e) {
+        }
+
+        $statement = $this->pdo->prepare($query);
+
+        foreach($map as $key => $value) {
+            $statement->bindValue($key, $value[0], $value[1]);
+        }
+
+        try {
+            return $statement->execute();
+        } catch (Throwable $e) {
             $this->reconnect();
 
-            return $this->pdo->query($query);
+            return $statement->execute();
         }
     }
 
     /**
      * @param $query
+     * @param array $map
      * @return bool|int
      */
-    public function exec($query)
+    public function exec($query, $map = [])
     {
-        try {
+        if(empty($map)) {
             return $this->pdo->exec($query);
-        } catch (Exception $e) {
-            $this->reconnect();
+        }
 
-            return $this->pdo->exec($query);
+        $statement = $this->pdo->prepare($query);
+
+        foreach($map as $key => $value) {
+            $statement->bindValue($key, $value[0], $value[1]);
+        }
+
+        try {
+            $statement->execute();
+
+            return $statement->rowCount();
+        } catch (Throwable $e) {
+            $this->reconnect();
+            $statement->execute();
+
+            return $statement->rowCount();
         }
     }
 

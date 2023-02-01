@@ -3,10 +3,8 @@
         <testsuite name="FastD">
             <directory>tests</directory>
         </testsuite>
-    </testsuites>
-    <testsuites>
         <testsuite name="App">
-            <directory>tests/src/Testing</directory>
+            <directory>app/src/Testing/</directory>
         </testsuite>
     </testsuites>
     <filter>

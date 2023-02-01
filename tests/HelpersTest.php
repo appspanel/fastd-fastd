@@ -1,6 +1,9 @@
 <?php
 
+use FastD\Http\Response;
 use FastD\Application;
+use FastD\Container\NotFoundException;
+use FastD\Http\JsonResponse;
 use Monolog\Handler\StreamHandler;
 
 /**
@@ -35,11 +38,10 @@ class HelpersTest extends \FastD\TestCase
         $this->assertArrayHasKey('database', config()->all());
     }
 
-    /**
-     * @expectedException \FastD\Container\NotFoundException
-     */
     public function testFunctionRequestInApplicationNotBootstrap()
     {
+        $this->expectException(NotFoundException::class);
+
         request();
     }
 
@@ -53,12 +55,16 @@ class HelpersTest extends \FastD\TestCase
 
     public function testFunctionResponseInApplicationNotBootstrapped()
     {
-        response();
+        $response = response();
+
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testFunctionResponseInApplicationHandleRequest()
     {
         $response = $this->handleRequest($this->request('GET', '/'));
+
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testFunctionJson()
@@ -66,15 +72,14 @@ class HelpersTest extends \FastD\TestCase
         $response = json(['foo' => 'bar']);
         $this->assertEquals(
             (string) $response->getContents(),
-            (string) (new \FastD\Http\JsonResponse(['foo' => 'bar']))->getContents()
+            (string) (new JsonResponse(['foo' => 'bar']))->getContents()
         );
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testFunctionAbort()
     {
+        $this->expectException(Exception::class);
+
         abort('400');
     }
 

@@ -6,45 +6,47 @@
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
  */
+
+use FastD\Model\Database;
 use FastD\Pool\DatabasePool;
+use PHPUnit\Framework\TestCase;
 
-class DatabasePoolTest extends PHPUnit_Framework_TestCase
+class DatabasePoolTest extends TestCase
 {
-    /**
-     * @var DatabasePool
-     */
-    protected $pool;
-
-    public function setUp()
+    protected function getDatabasePool(): DatabasePool
     {
-        $this->pool = new DatabasePool([
+        return new DatabasePool([
             'default' => [
                 'adapter' => 'mysql',
                 'name' => 'ci',
                 'host' => '127.0.0.1',
-                'user' => 'root',
-                'pass' => '',
+                'user' => 'ci',
+                'pass' => 'ci',
                 'charset' => 'utf8',
                 'port' => 3306,
             ],
         ]);
     }
 
-    public function testPool()
-    {
-        $this->assertInstanceOf(\Medoo\Medoo::class, $this->pool->getConnection('default'));
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
     public function testGetNotExistsConnection()
     {
-        $this->pool->getConnection('not_exists');
+        $this->expectException(LogicException::class);
+
+        $this->getDatabasePool()->getConnection('not_exists');
     }
 
-    public function testInitConnectionPool()
+    public function testPoolNotInitialized()
     {
-        $this->pool->initPool();
+        $pool = $this->getDatabasePool();
+
+        $this->assertInstanceOf(Database::class, $pool->getConnection('default'));
+    }
+
+    public function testPoolInitialized()
+    {
+        $pool = $this->getDatabasePool();
+        $pool->initPool();
+
+        $this->assertInstanceOf(Database::class, $pool->getConnection('default'));
     }
 }

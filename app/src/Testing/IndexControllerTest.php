@@ -13,7 +13,7 @@
     {
         public function createApplication()
         {
-            return new Application(__DIR__.'/../../default');
+            return new Application(__DIR__.'/../..');
         }
 
         public function testSayHello()

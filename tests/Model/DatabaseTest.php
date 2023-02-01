@@ -52,7 +52,7 @@ class DatabaseTest extends \FastD\TestCase
         $row = database()->get('hello', '*', [
             'id' => database()->id(),
         ]);
-        $this->assertInternalType('integer', $row['id']);
+        $this->assertIsInt($row['id']);
 
         $this->assertSame(true, database()->has('hello', [
             'id' => $row['id'],

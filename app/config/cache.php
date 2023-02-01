@@ -11,7 +11,8 @@ return [
     'default' => [
         'adapter' => \Symfony\Component\Cache\Adapter\FilesystemAdapter::class,
         'params' => [
-            'dsn' => 'redis://localhost:3306/db',
+            'namespace' => '',
+            'lifetime' => 3600,
         ],
     ],
 ];

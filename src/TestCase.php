@@ -31,7 +31,7 @@ class TestCase extends WebTestCase
     /**
      * Set up unit.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->app = $this->createApplication();
         parent::setUp();

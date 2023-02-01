@@ -26,7 +26,6 @@ class ServerTest extends FastD\TestCase
     public function testServerInit()
     {
         $server = $this->createServer();
-
         $server->bootstrap();
     }
 }

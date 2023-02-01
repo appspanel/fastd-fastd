@@ -6,9 +6,14 @@
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
  */
+
 use FastD\Application;
+use FastD\Container\NotFoundException;
+use FastD\Http\Response as FastDResponse;
 use FastD\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use ServiceProvider\FooServiceProvider;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ApplicationTest extends TestCase
 {
@@ -38,9 +43,7 @@ class ApplicationTest extends TestCase
 
         $consoles = config()->get('consoles');
         $consoles = array_unique($consoles);
-        $this->assertEquals([
-            'ServiceProvider\DemoConsole',
-        ], $consoles);
+        $this->assertEquals(['ServiceProvider\DemoConsole',], $consoles);
     }
 
     public function testConfigurationServiceProvider()
@@ -48,8 +51,8 @@ class ApplicationTest extends TestCase
         $this->assertEquals('fast-d', $this->app->get('config')->get('name'));
         $this->assertNull(config()->get('foo'));
         $this->assertFalse(config()->has('not_exists_key'));
-        $this->assertEquals(config()->get('foo', 'default'), 'default');
-        $this->assertEquals(config()->get('env.foo'), 'bar');
+        $this->assertEquals('default', config()->get('foo', 'default'));
+        $this->assertEquals('bar', config()->get('env.foo'));
     }
 
     public function testHandleRequest()
@@ -62,10 +65,15 @@ class ApplicationTest extends TestCase
 
     public function testHandleException()
     {
-        try {
+        try
+        {
             $e = new Exception('exception');
-            $this->app->handleException($e);
-        } catch (Exception $e) {
+            $response = $this->app->handleException($e);
+
+            $this->assertInstanceOf(FastDResponse::class, $response);
+        }
+        catch(Exception $e)
+        {
             $this->assertEquals('exception', $e->getMessage());
         }
     }
@@ -77,12 +85,12 @@ class ApplicationTest extends TestCase
         ]);
         $this->app->handleResponse($response);
         $this->expectOutputString((string) $response->getBody());
-        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $response);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     public function testSymfonyResponse()
     {
-        $response = new \Symfony\Component\HttpFoundation\Response('foo');
+        $response = new SymfonyResponse('foo');
         $this->app->handleResponse($response);
         $this->expectOutputString($response->getContent());
     }
@@ -92,5 +100,12 @@ class ApplicationTest extends TestCase
         $request = $this->request('GET', '/');
         $response = $this->handleRequest($request);
         $this->app->shutdown($request, $response);
+
+        $this->assertFalse($this->app->has('request'));
+        $this->assertFalse($this->app->has('response'));
+
+        $this->expectException(NotFoundException::class);
+        $this->app->get('request');
+        $this->app->get('response');
     }
 }
