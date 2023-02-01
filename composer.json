@@ -26,23 +26,22 @@
         }
     },
     "require": {
-        "php": "^8.0",
+        "php": ">=7.4",
         "fastd/container": "^3.0",
-        "fastd/http": "^3.0",
+        "fastd/http": "^3.1",
         "fastd/middleware": "^1.0",
-        "fastd/config": "^3.2",
-        "fastd/routing": "^3.0",
+        "fastd/config": "^3.3",
+        "fastd/routing": "^3.3",
         "fastd/swoole": "^2.0",
-        "fastd/testing": "^0.3",
         "fastd/migration": "^0.1",
         "fastd/query-builder": "^2.0",
         "catfan/medoo": "^1.2",
-        "symfony/cache": "^6.0",
+        "symfony/cache": "5.4.*",
         "monolog/monolog": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
-        "phpunit/dbunit": "^2.0",
+        "fastd/testing": "^0.3",
+        "phpunit/phpunit": "^9.5",
         "symfony/http-foundation": "^3.0"
     },
     "bin": [
@@ -53,14 +52,34 @@
     ],
     "repositories": [
         {
+            "name": "fastd/config",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/fastd-config.git"
+        },
+        {
+            "name": "fastd/http",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/fastd-http.git"
+        },
+        {
             "name": "fastd/migration",
             "type": "vcs",
-            "url": "https://github.com/appspanel/migration.git"
+            "url": "https://github.com/appspanel/fastd-migration.git"
+        },
+        {
+            "name": "fastd/routing",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/fastd-routing.git"
         },
         {
             "name": "fastd/swoole",
             "type": "vcs",
-            "url": "https://github.com/appspanel/swoole.git"
+            "url": "https://github.com/appspanel/fastd-swoole.git"
+        },
+        {
+            "name": "fastd/testing",
+            "type": "vcs",
+            "url": "https://github.com/appspanel/fastd-testing.git"
         }
     ]
 }
