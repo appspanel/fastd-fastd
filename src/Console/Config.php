@@ -21,7 +21,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Config extends Command
 {
-    public function configure()
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(): void
     {
         $this->setName('config');
         $this->addArgument('name', InputArgument::OPTIONAL, 'file name');
@@ -29,12 +32,9 @@ class Config extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (($name = $input->getArgument('name'))) {
             if ('php' === pathinfo($name, PATHINFO_EXTENSION)) {
@@ -53,8 +53,9 @@ class Config extends Command
 
             $output->write('<comment>'.$config.'</comment>');
 
-            return 0;
+            return self::SUCCESS;
         }
+
         $table = new Table($output);
         $rows = [];
         $table->setHeaders(array('File', 'Config', 'Owner', 'Modify At'));
@@ -76,5 +77,7 @@ class Config extends Command
 
         $table->setRows($rows);
         $table->render();
+
+        return self::SUCCESS;
     }
 }

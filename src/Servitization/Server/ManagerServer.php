@@ -44,10 +44,12 @@ class ManagerServer extends TCP
                 $server->close($fd);
 
                 break;
+
             case 'reload':
                 $this->getSwoole()->reload();
 
                 break;
+
             case 'status':
             default:
                 $info = $server->stats();

@@ -1,10 +1,10 @@
 <?php
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
- * @copyright 2016
- *
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
+ * @copyright 2016
+ *
  */
 
 namespace FastD\Logger;
@@ -15,15 +15,15 @@ namespace FastD\Logger;
 class AccessHandler extends HandlerAbstract
 {
     /**
-     * @return array
+     * {@inheritDoc}
      */
-    protected function logContextFormat()
+    protected function logContextFormat(): array
     {
         return [
-            'ip' => get_local_ip(),
+            'ip'     => get_local_ip(),
             'status' => response()->getStatusCode(),
-            'get' => request()->getQueryParams(),
-            'post' => request()->getParsedBody(),
+            'get'    => request()->getQueryParams(),
+            'post'   => request()->getParsedBody(),
         ];
     }
 }

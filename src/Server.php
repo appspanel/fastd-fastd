@@ -201,18 +201,22 @@ class Server
                 }
 
                 break;
+
             case 'stop':
                 $this->stop();
 
                 break;
+
             case 'reload':
                 $this->reload();
 
                 break;
+
             case 'restart':
                 $this->restart();
 
                 break;
+
             case 'status':
             default:
                 $this->status();

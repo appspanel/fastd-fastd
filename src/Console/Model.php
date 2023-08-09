@@ -9,24 +9,31 @@
 
 namespace FastD\Console;
 
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ModelCreate.
+ * Class Model
  */
 class Model extends Command
 {
-    public function configure()
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(): void
     {
         $this->setName('model');
         $this->setDescription('Automate create base CURD model class.');
         $this->addArgument('name', InputArgument::REQUIRED);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * {@inheritDoc}
+     */
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $modelPath = app()->getPath().'/src/Model';
         if (!file_exists($modelPath)) {
@@ -39,14 +46,16 @@ class Model extends Command
         $modelFile = $modelPath.'/'.$name.'.php';
 
         if (file_exists($modelFile)) {
-            throw new \LogicException(sprintf('Model %s is already exists', $name));
+            throw new LogicException(sprintf('Model %s is already exists', $name));
         }
 
         file_put_contents($modelFile, $content);
         $output->writeln(sprintf('Model %s created successful. path in %s', $name, $modelPath));
+
+        return self::SUCCESS;
     }
 
-    protected function createModelTemplate($name)
+    protected function createModelTemplate(string $name): string
     {
         $table = strtolower(str_replace('Model', '', $name));
 

@@ -16,11 +16,10 @@ use FastD\Swoole\Process;
  */
 abstract class AbstractProcess extends Process
 {
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @param array $options
-     *
      * @return $this
      */
     public function configure(array $options = [])

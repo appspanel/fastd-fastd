@@ -20,7 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Client extends Command
 {
-    protected function configure()
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure(): void
     {
         $this
             ->setName('client')
@@ -31,12 +34,9 @@ class Client extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $uri = $input->getArgument('uri');
 
@@ -68,6 +68,6 @@ class Client extends Command
 
         $output->writeln($response);
 
-        return 0;
+        return self::SUCCESS;
     }
 }

@@ -1,10 +1,10 @@
 <?php
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
- * @copyright 2016
- *
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
+ * @copyright 2016
+ *
  */
 
 namespace FastD\Logger;
@@ -14,16 +14,19 @@ namespace FastD\Logger;
  */
 class ErrorHandler extends HandlerAbstract
 {
-    protected function logContextFormat()
+    /**
+     * {@inheritDoc}
+     */
+    protected function logContextFormat(): array
     {
         return [
-            'ip' => get_local_ip(),
-            'get' => request()->getQueryParams(),
-            'post' => request()->getParsedBody(),
-            'msg' => exception()->getMessage(),
-            'code' => exception()->getCode(),
-            'file' => exception()->getFile(),
-            'line' => exception()->getLine(),
+            'ip'    => get_local_ip(),
+            'get'   => request()->getQueryParams(),
+            'post'  => request()->getParsedBody(),
+            'msg'   => exception()->getMessage(),
+            'code'  => exception()->getCode(),
+            'file'  => exception()->getFile(),
+            'line'  => exception()->getLine(),
             'trace' => explode("\n", exception()->getTraceAsString()),
         ];
     }

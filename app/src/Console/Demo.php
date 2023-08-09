@@ -15,13 +15,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Demo extends Command
 {
-    public function configure()
+    public function configure(): void
     {
         $this->setName('demo');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('hello world');
+
+        return self::SUCCESS;
     }
 }

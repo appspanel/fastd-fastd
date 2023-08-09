@@ -9,6 +9,7 @@
 
 namespace FastD;
 
+use FastD\Console\Client as ConsoleClient;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,18 +23,16 @@ class Client extends Console
     {
         parent::__construct($app);
 
-        $this->add(new \FastD\Console\Client());
+        $this->add(new ConsoleClient());
     }
 
     /**
      * @param InputInterface|null  $input
      * @param OutputInterface|null $output
-     *
      * @return int
-     *
      * @throws \Exception
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         $argv = $_SERVER['argv'];
         $script = array_shift($argv);

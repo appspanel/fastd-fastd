@@ -40,8 +40,10 @@ class TCPServer extends TCP
 
             return 0;
         }
+
         $data = Json::decode($data);
         $request = new ServerRequest($data['method'], $data['path']);
+
         if (isset($data['args'])) {
             if ('GET' === $request->getMethod()) {
                 $request->withQueryParams($data['args']);
@@ -49,13 +51,17 @@ class TCPServer extends TCP
                 $request->withParsedBody($data['args']);
             }
         }
+
         $response = app()->handleRequest($request);
+
         if (null !== $response->getFileDescriptor()) {
             $fd = $response->getFileDescriptor();
         }
+
         if (false === $server->connection_info($fd)) {
             return -1;
         }
+
         $server->send($fd, (string) $response->getBody());
         app()->shutdown($request, $response);
 

@@ -41,30 +41,30 @@ class Application extends Container
     /**
      * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * @var bool
      */
-    protected $booted = false;
+    protected bool $booted = false;
 
     /**
      * @var int
      */
-    protected $mode;
+    protected int $mode;
 
     /**
      * AppKernel constructor.
      *
-     * @param $path
-     * @param $mode
+     * @param string $path
+     * @param int $mode
      */
-    public function __construct($path, $mode = Application::MODE_FPM)
+    public function __construct(string $path, int $mode = Application::MODE_FPM)
     {
         $this->path = $path;
 
@@ -80,7 +80,7 @@ class Application extends Container
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -88,7 +88,7 @@ class Application extends Container
     /**
      * @return bool
      */
-    public function isBooted()
+    public function isBooted(): bool
     {
         return $this->booted;
     }
@@ -96,7 +96,7 @@ class Application extends Container
     /**
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -104,7 +104,7 @@ class Application extends Container
     /**
      * Application bootstrap.
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         if (!$this->booted) {
             $config = load($this->path.'/config/app.php');
@@ -126,14 +126,14 @@ class Application extends Container
     /**
      * Application reboot.
      */
-    public function reboot()
+    public function reboot(): void
     {
         $this->booted = false;
 
         $this->bootstrap();
     }
 
-    protected function registerExceptionHandler()
+    protected function registerExceptionHandler(): void
     {
         $level = config()->get('error_reporting', E_ALL);
         error_reporting($level);
@@ -148,9 +148,10 @@ class Application extends Container
     /**
      * @param ServiceProviderInterface[] $services
      */
-    protected function registerServicesProviders(array $services)
+    protected function registerServicesProviders(array $services): void
     {
         $this->register(new ConfigServiceProvider());
+
         foreach ($services as $service) {
             $this->register(new $service());
         }
@@ -196,7 +197,7 @@ class Application extends Container
             ];
         }
 
-        logger()->log(Logger::ERROR, $e->getMessage(), $trace);
+        logger()->error($e->getMessage(), $trace);
 
         if (Application::MODE_CLI === $this->mode) {
             throw $e;

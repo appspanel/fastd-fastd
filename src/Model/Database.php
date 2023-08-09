@@ -86,6 +86,7 @@ class Database extends Medoo
      */
     public function exec($query, $map = [])
     {
+        file_put_contents('/tmp/debug.log', $query.PHP_EOL, FILE_APPEND);
         if(empty($map)) {
             return $this->pdo->exec($query);
         }

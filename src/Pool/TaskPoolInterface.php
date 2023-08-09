@@ -7,8 +7,5 @@ namespace FastD\Pool;
  */
 interface TaskPoolInterface
 {
-    /**
-     * @return mixed
-     */
-    public function initPool();
+    public function initPool(): void;
 }

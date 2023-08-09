@@ -40,7 +40,7 @@ class TestCase extends WebTestCase
     /**
      * @return bool
      */
-    public function isLocal()
+    public function isLocal(): bool
     {
         return 'prod' !== config()->get('env');
     }

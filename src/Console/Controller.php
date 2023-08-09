@@ -9,21 +9,31 @@
 
 namespace FastD\Console;
 
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class Controller
+ */
 class Controller extends Command
 {
-    public function configure()
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(): void
     {
         $this->setName('controller');
         $this->setDescription('Automate create base controller class.');
         $this->addArgument('name', InputArgument::REQUIRED);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * {@inheritDoc}
+     */
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $controllerPath = app()->getPath().'/src/Controller';
         if (!file_exists($controllerPath)) {
@@ -36,14 +46,16 @@ class Controller extends Command
         $controllerFile = $controllerPath.'/'.$name.'.php';
 
         if (file_exists($controllerFile)) {
-            throw new \LogicException(sprintf('Controller %s is already exists', $name));
+            throw new LogicException(sprintf('Controller %s is already exists', $name));
         }
 
         file_put_contents($controllerFile, $content);
         $output->writeln(sprintf('Controller %s created successful. path in %s', $name, $controllerPath));
+
+        return self::SUCCESS;
     }
 
-    public function createControllerTemplate($name)
+    public function createControllerTemplate(string $name): string
     {
         return <<<CONTROLLER
 <?php

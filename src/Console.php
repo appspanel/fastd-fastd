@@ -9,6 +9,7 @@
 
 namespace FastD;
 
+use Exception;
 use FastD\Console\Config;
 use FastD\Console\Controller;
 use FastD\Console\Migration;
@@ -52,7 +53,7 @@ EOF
     /**
      * Scan commands.
      */
-    public function registerCommands()
+    public function registerCommands(): void
     {
         $this->addCommands([
             new Model(),
@@ -80,19 +81,17 @@ EOF
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
-     *
      * @return int
-     *
      * @throws \Throwable
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         app()->add('input', $input);
         app()->add('output', $output);
 
         try {
             return parent::doRun($input, $output);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             app()->handleException($exception);
         }
 

@@ -10,6 +10,7 @@
 namespace FastD\Process;
 
 use FastD\Swoole\Process;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,14 +24,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProcessManager extends Command
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $pidPath;
+    protected ?string $pidPath = null;
 
     /**
      * php bin/console process {name} {args} {options}.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('process');
         $this->addArgument('process', InputArgument::OPTIONAL, 'process name');
@@ -47,7 +48,7 @@ class ProcessManager extends Command
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = $this->targetDirectory($input);
 
@@ -60,26 +61,30 @@ class ProcessManager extends Command
         $processes = config()->get('processes', []);
 
         if (!isset($processes[$processName])) {
-            throw new \RuntimeException(sprintf('Process %s cannot found', $processName));
+            throw new RuntimeException(sprintf('Process %s cannot found', $processName));
         }
 
         $config = $processes[$processName];
+
         if (!class_exists($config['process'])) {
-            throw new \RuntimeException(sprintf('Process class "%s" is not found.', $processName));
+            throw new RuntimeException(sprintf('Process class "%s" is not found.', $processName));
         }
 
         $name = $input->getOption('name');
+
         if (empty($name)) {
             $name = $processName;
         }
+
         $process = $config['process'];
         $options = isset($config['options']) ? (array) $config['options'] : [];
         $process = new $process($name);
         $process->configure($options);
 
         if (!($process instanceof Process)) {
-            throw new \RuntimeException('Process must be instance of \FastD\Swoole\Process');
+            throw new RuntimeException('Process must be instance of \FastD\Swoole\Process');
         }
+
         if ($input->hasParameterOption(['--daemon', '-d'])) {
             $process->daemon();
         }
@@ -93,18 +98,21 @@ class ProcessManager extends Command
                 $output->writeln(sprintf('process <info>%s</info> pid: <info>%s</info>', $process->getName(), $pid));
                 $output->writeln(sprintf('pid: <info>%s</info>', $pidFile));
 
-                $process->wait(function ($ret) use ($name) {
-                    return $this->finish($name, $ret['pid'], $ret['code'], $ret['signal']);
+                $process->wait(function (array $ret) use ($name) {
+                    $this->finish($name, $ret['pid'], $ret['code'], $ret['signal']);
                 });
 
                 break;
+
             case 'stop':
                 $pid = (int) file_get_contents($pidFile);
+
                 if ($process->kill($pid, SIGTERM)) {
                     $output->writeln(sprintf('process %s pid %s is killed', $process->getName(), $pid));
                 }
 
                 break;
+
             case 'status':
             default:
                 $table = new Table($output);
@@ -116,23 +124,24 @@ class ProcessManager extends Command
                     ['status', sprintf('<info>%s</info>', $info[2])],
                     ['pid', sprintf('<info>%s</info>', $info[1])],
                 ];
+
                 foreach ($options as $key => $value) {
                     $rows[] = ['options.'.$key, sprintf('<info>%s</info>', $value)];
                 }
+
                 $table->setRows($rows);
                 $table->setStyle('compact');
                 $table->render();
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     /**
      * @param InputInterface $input
-     *
      * @return string
      */
-    protected function targetDirectory(InputInterface $input)
+    protected function targetDirectory(InputInterface $input): string
     {
         $pid = $input->getParameterOption(['--path', '-p']);
 
@@ -151,29 +160,29 @@ class ProcessManager extends Command
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
-     *
      * @return int
      */
-    protected function showProcesses(InputInterface $input, OutputInterface $output)
+    protected function showProcesses(InputInterface $input, OutputInterface $output): int
     {
         $table = new Table($output);
         $table->setHeaders(['Process', 'Pid', 'Status', 'Start At', 'Runtime']);
         $rows = [];
+
         foreach (config()->get('processes', []) as $name => $processor) {
             $rows[] = $this->getProcessInfo($name);
         }
+
         $table->setRows($rows);
         $table->render();
 
-        return 0;
+        return self::SUCCESS;
     }
 
     /**
-     * @param $name
-     *
+     * @param string $name
      * @return array
      */
-    protected function getProcessInfo($name)
+    protected function getProcessInfo(string $name): array
     {
         $pidFile = $this->pidPath.'/'.$name.'.pid';
         $pid = file_exists($pidFile) ? (int) file_get_contents($pidFile) : '';
@@ -192,12 +201,12 @@ class ProcessManager extends Command
     }
 
     /**
-     * @param $name
-     * @param $pid
+     * @param string $name
+     * @param int $pid
      * @param int $code
      * @param int $signal
      */
-    protected function finish($name, $pid, $code = 0, $signal = 0)
+    protected function finish(string $name, int $pid, int $code = 0, int $signal = 0): void
     {
         output()->writeln(sprintf('process: %s. pid: %s exit. code: %s. signal: %s', $name, $pid, $code, $signal));
     }

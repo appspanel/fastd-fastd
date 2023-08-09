@@ -15,7 +15,7 @@ namespace FastD\Pool;
 interface PoolInterface
 {
     /**
-     * @return mixed
+     * Initializes the pool.
      */
-    public function initPool();
+    public function initPool(): void;
 }

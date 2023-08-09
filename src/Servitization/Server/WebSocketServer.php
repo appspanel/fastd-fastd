@@ -37,6 +37,7 @@ class WebSocketServer extends WebSocket
         $data = $frame->data;
         $data = Json::decode($data);
         $request = new ServerRequest($data['method'], $data['path']);
+
         if (isset($data['args'])) {
             if ('GET' === $request->getMethod()) {
                 $request->withQueryParams($data['args']);
@@ -44,11 +45,14 @@ class WebSocketServer extends WebSocket
                 $request->withParsedBody($data['args']);
             }
         }
+
         $response = app()->handleRequest($request);
         $fd = null !== ($fd = $response->getFileDescriptor()) ? $fd : $frame->fd;
+
         if (false === $server->connection_info($fd)) {
             return -1;
         }
+
         $server->push($fd, (string) $response->getBody());
         app()->shutdown($request, $response);
 

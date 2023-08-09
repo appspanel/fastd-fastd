@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Processor extends Console
 {
-    public function registerCommands()
+    public function registerCommands(): void
     {
         $command = new ProcessManager();
 
@@ -40,7 +40,7 @@ class Processor extends Console
      *
      * @throws \Exception
      */
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         $argv = $_SERVER['argv'];
         $script = array_shift($argv);

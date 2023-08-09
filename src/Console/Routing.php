@@ -22,7 +22,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Routing extends Command
 {
-    public function configure()
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(): void
     {
         $this
             ->setName('route')
@@ -36,12 +39,10 @@ class Routing extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return mixed
+     * {@inheritDoc}
+     * @throws \Throwable
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (empty($path = $input->getArgument('path'))) {
             $this->render($input, $output);
@@ -49,16 +50,17 @@ class Routing extends Command
             $this->test($input->getArgument('method'), $path, $input, $output);
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 
     /**
      * @param $method
      * @param $path
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
+     * @throws \Throwable
      */
-    protected function test($method, $path, InputInterface $input, OutputInterface $output)
+    protected function test($method, $path, InputInterface $input, OutputInterface $output): void
     {
         $request = new ServerRequest($method, $path, [
             'User-Agent' => 'FastD Console/'.version(),
@@ -84,15 +86,17 @@ class Routing extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function render(InputInterface $input, OutputInterface $output)
+    protected function render(InputInterface $input, OutputInterface $output): void
     {
         $table = new Table($output);
         $rows = [];
         $table->setHeaders(array('Path', 'Method', 'Callback', 'Middleware'));
+
         foreach (route()->aliasMap as $routes) {
             foreach ($routes as $route) {
                 $m = [];
                 $middleware = $route->getMiddleware();
+
                 if (is_array($middleware)) {
                     foreach ($middleware as $value) {
                         if (is_object($value)) {
@@ -106,14 +110,17 @@ class Routing extends Command
                 }
 
                 $callback = $route->getCallback();
+
                 if (is_object($callback)) {
                     $callback = get_class($callback);
                 } elseif (is_array($callback)) {
                     if (is_object($callback[0])) {
                         $callback[0] = get_class($callback[0]);
                     }
+
                     $callback = implode('@', $callback);
                 }
+
                 $rows[] = [
                     $route->getPath(),
                     $route->getMethod(),

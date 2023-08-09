@@ -9,6 +9,8 @@
 
 namespace FastD\Pool;
 
+use Exception;
+use LogicException;
 use ReflectionClass;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -22,17 +24,17 @@ class CachePool implements PoolInterface
     /**
      * @var AbstractAdapter[]
      */
-    protected $caches = [];
+    protected array $caches = [];
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * @var array
      */
-    protected $redises = [];
+    protected array $redises = [];
 
     /**
      * Cache constructor.
@@ -52,7 +54,7 @@ class CachePool implements PoolInterface
     protected function connect($key)
     {
         if (!isset($this->config[$key])) {
-            throw new \LogicException(sprintf('No set %s cache', $key));
+            throw new LogicException(sprintf('No set %s cache', $key));
         }
         $config = $this->config[$key];
 
@@ -62,6 +64,7 @@ class CachePool implements PoolInterface
             || (new ReflectionClass($config['adapter']))->isSubclassOf(RedisAdapter::class)) {
             return $this->getRedisAdapter($config, $key);
         }
+
         return $this->getAdapter($config);
     }
 
@@ -91,7 +94,7 @@ class CachePool implements PoolInterface
     /**
      * {@inheritdoc}
      */
-    public function initPool()
+    public function initPool(): void
     {
         foreach ($this->config as $name => $config) {
             $this->getCache($name);
@@ -112,7 +115,7 @@ class CachePool implements PoolInterface
                 isset($config['params']['namespace']) ? $config['params']['namespace'] : '',
                 isset($config['params']['lifetime']) ? $config['params']['lifetime'] : ''
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $cache = new FilesystemAdapter('', 0, '/tmp/cache');
         }
 

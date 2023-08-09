@@ -36,6 +36,7 @@ class UDPServer extends UDP
     {
         $data = Json::decode($data);
         $request = new ServerRequest($data['method'], $data['path']);
+
         if (isset($data['args'])) {
             if ('GET' === $request->getMethod()) {
                 $request->withQueryParams($data['args']);
@@ -43,6 +44,7 @@ class UDPServer extends UDP
                 $request->withParsedBody($data['args']);
             }
         }
+
         $response = app()->handleRequest($request);
         $server->sendto($clientInfo['address'], $clientInfo['port'], (string) $response->getBody());
         app()->shutdown($request, $response);

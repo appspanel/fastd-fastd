@@ -16,10 +16,8 @@ class MoltenServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container
-     *
-     * @return mixed
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         if (function_exists('molten_set_service_name')) {
             molten_set_service_name(app()->getName());

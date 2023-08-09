@@ -10,6 +10,7 @@
 namespace FastD\Console;
 
 use FastD\Migration\Migrate;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,18 +28,25 @@ class Migration extends Migrate
         ]);
     }
 
-    public function configure()
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(): void
     {
         parent::configure();
         $this->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Database default connection', 'default');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * {@inheritDoc}
+     */
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = config()->get('database', []);
         $connection = $input->getOption('connection');
+
         if (!isset($config[$connection])) {
-            throw new \RuntimeException(sprintf('Cannot found database "%s" config', $connection));
+            throw new RuntimeException(sprintf('Cannot found database "%s" config', $connection));
         }
 
         $this->config = $config[$connection];

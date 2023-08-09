@@ -9,6 +9,7 @@
 
 namespace FastD\Logger;
 
+use Monolog\DateTimeImmutable;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonoLogger;
@@ -19,13 +20,13 @@ use Monolog\Logger as MonoLogger;
 class Logger extends MonoLogger
 {
     /**
-     * @param int    $level
+     * @param int $level
      * @param string $message
-     * @param array  $context
-     *
+     * @param array $context
+     * @param \Monolog\DateTimeImmutable|null $datetime
      * @return bool
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord(int $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
     {
         if (empty($this->handlers)) {
             $emptyHandler = new StreamHandler('php://temp');

@@ -7,8 +7,5 @@ namespace FastD\Pool;
  */
 interface WorkerPoolInterface
 {
-    /**
-     * @return mixed
-     */
-    public function initPool();
+    public function initPool(): void;
 }

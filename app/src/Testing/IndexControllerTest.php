@@ -61,21 +61,19 @@
             $response = $this->app->handleRequest($this->request('GET', '/auth'));
 
             $this->assertEquals(401, $response->getStatusCode());
-
             $this->equalsJson($response, [
-                              'msg' => 'not allow access',
-                              'code' => 401,
-                              ]);
+                'msg' => 'not allow access',
+                'code' => 401,
+            ]);
 
-            $response = $this->app->handleRequest($this->request('GET', 'http://foo:bar@example.com/auth', [
-                                                                 'PHP_AUTH_USER' => 'foo',
-                                                                 'PHP_AUTH_PW' => 'bar',
-                                                                 ]));
+            $response = $this->app->handleRequest($this->request('GET', 'http://foo:bar@127.0.0.1/auth', [
+                'PHP_AUTH_USER' => 'foo',
+                'PHP_AUTH_PW' => 'bar',
+            ]));
 
             $this->assertEquals(200, $response->getStatusCode());
-
             $this->equalsJson($response, [
-                              'foo' => 'bar',
-                              ]);
+                'foo' => 'bar',
+            ]);
         }
     }

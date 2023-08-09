@@ -9,6 +9,7 @@
 
 namespace FastD\Servitization;
 
+use Exception;
 use FastD\Pool\PoolInterface;
 use Swoole\Server as SwooleServer;
 
@@ -27,12 +28,13 @@ trait OnWorkerStart
 
         try {
             app()->reboot();
+
             foreach (app() as $service) {
                 if ($service instanceof PoolInterface) {
                     $service->initPool();
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage().PHP_EOL;
         }
     }

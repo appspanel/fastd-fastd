@@ -1,10 +1,10 @@
 <?php
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
- * @copyright 2016
- *
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
+ * @copyright 2016
+ *
  */
 
 namespace FastD\Logger;
@@ -18,7 +18,7 @@ abstract class HandlerAbstract extends StreamHandler
      *
      * @param array $record
      */
-    protected function write(array $record = [])
+    protected function write(array $record = []): void
     {
         $record['context'] = $this->logContextFormat();
 
@@ -28,5 +28,5 @@ abstract class HandlerAbstract extends StreamHandler
     /**
      * @return array
      */
-    abstract protected function logContextFormat();
+    abstract protected function logContextFormat(): array;
 }

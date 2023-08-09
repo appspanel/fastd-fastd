@@ -10,6 +10,7 @@
 namespace FastD\Pool;
 
 use FastD\Model\Database;
+use LogicException;
 
 /**
  * Class DatabasePool.
@@ -19,12 +20,12 @@ class DatabasePool implements PoolInterface
     /**
      * @var Database[]
      */
-    protected $connections = [];
+    protected array $connections = [];
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Database constructor.
@@ -38,15 +39,14 @@ class DatabasePool implements PoolInterface
 
     /**
      * @param $key
-     * @param $force
-     *
+     * @param bool $force
      * @return Database
      */
-    public function getConnection($key, $force = false)
+    public function getConnection($key, bool $force = false): Database
     {
         if ($force || !isset($this->connections[$key])) {
             if (!isset($this->config[$key])) {
-                throw new \LogicException(sprintf('No set %s database', $key));
+                throw new LogicException(sprintf('No set %s database', $key));
             }
             $config = $this->config[$key];
             $this->connections[$key] = new Database(
@@ -71,7 +71,7 @@ class DatabasePool implements PoolInterface
     /**
      * {@inheritdoc}
      */
-    public function initPool()
+    public function initPool(): void
     {
         foreach ($this->config as $name => $config) {
             $this->getConnection($name, true);
