@@ -158,8 +158,8 @@ class Application extends Container
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @return Response|\Symfony\Component\HttpFoundation\Response
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @return \FastD\Http\Response
      * @throws \Throwable
      */
     public function handleRequest(ServerRequestInterface $request)
@@ -174,9 +174,9 @@ class Application extends Container
     }
 
     /**
-     * @param Response|\Symfony\Component\HttpFoundation\Response $response
+     * @param \FastD\Http\Response $response
      */
-    public function handleResponse($response)
+    public function handleResponse(Response $response)
     {
         $response->send();
     }
@@ -219,12 +219,11 @@ class Application extends Container
     }
 
     /**
-     * @param ServerRequestInterface                                       $request
-     * @param ResponseInterface|\Symfony\Component\HttpFoundation\Response $response
-     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
      * @return int
      */
-    public function shutdown(ServerRequestInterface $request, $response)
+    public function shutdown(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->offsetUnset('request');
         $this->offsetUnset('response');
@@ -236,8 +235,7 @@ class Application extends Container
 
     /**
      * @return int
-     *
-     * @throws Exception
+     * @throws \Throwable
      */
     public function run()
     {

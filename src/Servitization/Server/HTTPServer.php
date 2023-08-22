@@ -9,7 +9,6 @@
 
 namespace FastD\Servitization\Server;
 
-use FastD\Http\Response;
 use FastD\Http\SwooleServerRequest;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\HTTP;
@@ -60,7 +59,7 @@ class HTTPServer extends HTTP
     /**
      * @param ServerRequestInterface $serverRequest
      *
-     * @return Response|\Symfony\Component\HttpFoundation\Response
+     * @return \FastD\Http\Response
      *
      * @throws \Exception
      */

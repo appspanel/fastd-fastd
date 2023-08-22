@@ -41,8 +41,7 @@
     },
     "require-dev": {
         "fastd/testing": "^0.3",
-        "phpunit/phpunit": "^9.5",
-        "symfony/http-foundation": "6.3.*"
+        "phpunit/phpunit": "^9.5"
     },
     "bin": [
         "bin/console",

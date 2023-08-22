@@ -13,7 +13,6 @@ use FastD\Http\Response as FastDResponse;
 use FastD\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use ServiceProvider\FooServiceProvider;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ApplicationTest extends TestCase
 {
@@ -34,6 +33,7 @@ class ApplicationTest extends TestCase
     public function testServiceProvider()
     {
         $this->app->register(new FooServiceProvider());
+
         $this->assertEquals('foo', $this->app['foo']->name);
     }
 
@@ -58,6 +58,7 @@ class ApplicationTest extends TestCase
     public function testHandleRequest()
     {
         $response = $this->app->handleRequest($this->request('GET', '/'));
+
         $this->equalsJson($response, [
             'foo' => 'bar',
         ]);
@@ -84,15 +85,9 @@ class ApplicationTest extends TestCase
             'foo' => 'bar',
         ]);
         $this->app->handleResponse($response);
+
         $this->expectOutputString((string) $response->getBody());
         $this->assertInstanceOf(ResponseInterface::class, $response);
-    }
-
-    public function testSymfonyResponse()
-    {
-        $response = new SymfonyResponse('foo');
-        $this->app->handleResponse($response);
-        $this->expectOutputString($response->getContent());
     }
 
     public function testApplicationShutdown()
