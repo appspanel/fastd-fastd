@@ -28,21 +28,21 @@ class DatabasePoolTest extends TestCase
         ]);
     }
 
-    public function testGetNotExistsConnection()
+    public function testGetNotExistsConnection(): void
     {
         $this->expectException(LogicException::class);
 
         $this->getDatabasePool()->getConnection('not_exists');
     }
 
-    public function testPoolNotInitialized()
+    public function testPoolNotInitialized(): void
     {
         $pool = $this->getDatabasePool();
 
         $this->assertInstanceOf(Database::class, $pool->getConnection('default'));
     }
 
-    public function testPoolInitialized()
+    public function testPoolInitialized(): void
     {
         $pool = $this->getDatabasePool();
         $pool->initPool();

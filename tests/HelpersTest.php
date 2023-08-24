@@ -15,37 +15,37 @@ use Monolog\Handler\StreamHandler;
  */
 class HelpersTest extends \FastD\TestCase
 {
-    public function createApplication()
+    public function createApplication(): Application
     {
         return new Application(__DIR__.'/../app');
     }
 
-    public function testFunctionApp()
+    public function testFunctionApp(): void
     {
         $this->assertEquals('fast-d', app()->getName());
     }
 
-    public function testFunctionRoute()
+    public function testFunctionRoute(): void
     {
         $router = route();
         $map = $router->aliasMap;
         $this->assertArrayHasKey('GET', $map);
     }
 
-    public function testFunctionConfig()
+    public function testFunctionConfig(): void
     {
         $this->assertEquals('fast-d', config()->get('name'));
         $this->assertArrayHasKey('database', config()->all());
     }
 
-    public function testFunctionRequestInApplicationNotBootstrap()
+    public function testFunctionRequestInApplicationNotBootstrap(): void
     {
         $this->expectException(NotFoundException::class);
 
         request();
     }
 
-    public function testFunctionRequestInApplicationHandleRequest()
+    public function testFunctionRequestInApplicationHandleRequest(): void
     {
         $this->handleRequest($this->request('GET', '/'));
         $request = request();
@@ -53,21 +53,21 @@ class HelpersTest extends \FastD\TestCase
         $this->assertEquals('GET', $request->getMethod());
     }
 
-    public function testFunctionResponseInApplicationNotBootstrapped()
+    public function testFunctionResponseInApplicationNotBootstrapped(): void
     {
         $response = response();
 
         $this->assertInstanceOf(Response::class, $response);
     }
 
-    public function testFunctionResponseInApplicationHandleRequest()
+    public function testFunctionResponseInApplicationHandleRequest(): void
     {
         $response = $this->handleRequest($this->request('GET', '/'));
 
         $this->assertInstanceOf(Response::class, $response);
     }
 
-    public function testFunctionJson()
+    public function testFunctionJson(): void
     {
         $response = json(['foo' => 'bar']);
         $this->assertEquals(
@@ -76,14 +76,14 @@ class HelpersTest extends \FastD\TestCase
         );
     }
 
-    public function testFunctionAbort()
+    public function testFunctionAbort(): void
     {
         $this->expectException(Exception::class);
 
         abort('400');
     }
 
-    public function testFunctionLogger()
+    public function testFunctionLogger(): void
     {
         $logFile = app()->getPath().'/runtime/logs/demo.log';
         logger()->pushHandler(new StreamHandler($logFile));
@@ -92,7 +92,7 @@ class HelpersTest extends \FastD\TestCase
         unset($logFile);
     }
 
-    public function testFunctionCache()
+    public function testFunctionCache(): void
     {
         $item = cache()->getItem('hello');
         $item->set('world');
@@ -100,7 +100,7 @@ class HelpersTest extends \FastD\TestCase
         $this->assertTrue(cache()->getItem('hello')->isHit());
     }
 
-    public function testFunctionDatabase()
+    public function testFunctionDatabase(): void
     {
         $this->assertEquals('mysql', database()->info()['driver']);
         $this->assertNotNull(database());

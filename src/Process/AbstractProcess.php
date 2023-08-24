@@ -25,7 +25,7 @@ abstract class AbstractProcess extends Process
      * @param array<string,mixed> $options
      * @return $this
      */
-    public function configure(array $options = [])
+    public function configure(array $options = []): static
     {
         $this->options = $options;
 

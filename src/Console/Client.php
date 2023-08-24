@@ -47,7 +47,7 @@ class Client extends Command
 
         client()->createRequest($uri);
 
-        if (false === strpos(client()->getProtocol(), 'http') && empty($data)) {
+        if (!str_contains(client()->getProtocol(), 'http') && empty($data)) {
             $data = ' ';
         }
 
@@ -60,7 +60,7 @@ class Client extends Command
                 $header .= $key.': '.$response->getHeaderLine($key).PHP_EOL;
             }
             $response = $header."\r\n".json_encode(json_decode($json, true), JSON_PRETTY_PRINT);
-        } elseif (false !== strpos(client()->getProtocol(), 'http')) {
+        } elseif (str_contains(client()->getProtocol(), 'http')) {
             $response = (string) $response;
         } else {
             $response = $response->getContents();

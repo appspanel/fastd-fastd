@@ -16,28 +16,28 @@ use ServiceProvider\FooServiceProvider;
 
 class ApplicationTest extends TestCase
 {
-    public function createApplication()
+    public function createApplication(): Application
     {
         $app = new Application(__DIR__.'/../app');
 
         return $app;
     }
 
-    public function testApplicationBootstrap()
+    public function testApplicationBootstrap(): void
     {
         $this->assertEquals('fast-d', $this->app->getName());
         $this->assertTrue($this->app->isBooted());
         $this->assertEquals(date_default_timezone_get(), config()->get('timezone'));
     }
 
-    public function testServiceProvider()
+    public function testServiceProvider(): void
     {
         $this->app->register(new FooServiceProvider());
 
         $this->assertEquals('foo', $this->app['foo']->name);
     }
 
-    public function testServiceProviderAutomateConsole()
+    public function testServiceProviderAutomateConsole(): void
     {
         $this->app->register(new FooServiceProvider());
 
@@ -46,7 +46,7 @@ class ApplicationTest extends TestCase
         $this->assertEquals(['ServiceProvider\DemoConsole',], $consoles);
     }
 
-    public function testConfigurationServiceProvider()
+    public function testConfigurationServiceProvider(): void
     {
         $this->assertEquals('fast-d', $this->app->get('config')->get('name'));
         $this->assertNull(config()->get('foo'));
@@ -55,7 +55,7 @@ class ApplicationTest extends TestCase
         $this->assertEquals('bar', config()->get('env.foo'));
     }
 
-    public function testHandleRequest()
+    public function testHandleRequest(): void
     {
         $response = $this->app->handleRequest($this->request('GET', '/'));
 
@@ -64,7 +64,7 @@ class ApplicationTest extends TestCase
         ]);
     }
 
-    public function testHandleException()
+    public function testHandleException(): void
     {
         try
         {
@@ -79,7 +79,7 @@ class ApplicationTest extends TestCase
         }
     }
 
-    public function testHandleResponse()
+    public function testHandleResponse(): void
     {
         $response = json([
             'foo' => 'bar',
@@ -90,7 +90,7 @@ class ApplicationTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testApplicationShutdown()
+    public function testApplicationShutdown(): void
     {
         $request = $this->request('GET', '/');
         $response = $this->handleRequest($request);

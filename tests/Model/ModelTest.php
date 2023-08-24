@@ -11,20 +11,20 @@ use FastD\Model\Model;
 
 class ModelTest extends \FastD\TestCase
 {
-    public function createApplication()
+    public function createApplication(): Application
     {
         $app = new Application(__DIR__.'/../../app');
 
         return $app;
     }
 
-    public function testCreateModel()
+    public function testCreateModel(): void
     {
         $model = new Model(database());
         $this->assertNotNull($model->getDatabase());
     }
 
-    public function testFactoryCreateModel()
+    public function testFactoryCreateModel(): void
     {
         $demo = \FastD\Model\ModelFactory::createModel('demo');
         $this->assertEquals($demo, new \Model\DemoModel(database()));

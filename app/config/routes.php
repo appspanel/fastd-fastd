@@ -1,6 +1,7 @@
 <?php
 
 use Middleware\FooMiddleware;
+use Middleware\HttpAuthenticationMiddleware;
 
 route()->get('/', 'IndexController@welcome');
 
@@ -15,4 +16,7 @@ route()->get('/db', 'IndexController@db');
 
 route()->get('/model', 'IndexController@model');
 
-route()->get('/auth', 'IndexController@auth');
+route()
+    ->get('/auth', 'IndexController@auth')
+    ->withAddMiddleware(new HttpAuthenticationMiddleware())
+;

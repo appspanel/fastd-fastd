@@ -6,24 +6,25 @@
  * @see      https://www.github.com/janhuang
  * @see      https://fastdlabs.com
  */
+
 use FastD\Application;
 use FastD\Server;
 
 class ServerTest extends FastD\TestCase
 {
-    public function createApplication()
+    public function createApplication(): Application
     {
         $app = new Application(__DIR__.'/../app');
 
         return $app;
     }
 
-    public function createServer()
+    public function createServer(): Server
     {
         return new Server($this->createApplication());
     }
 
-    public function testServerInit()
+    public function testServerInit(): void
     {
         $server = $this->createServer();
         $server->bootstrap();

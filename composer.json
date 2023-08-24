@@ -28,7 +28,7 @@
     "require": {
         "php": ">=7.4",
         "fastd/container": "^6.0",
-        "fastd/http": "^3.1",
+        "fastd/http": "^3.2",
         "fastd/middleware": "^1.0",
         "fastd/config": "^3.3",
         "fastd/routing": "^3.3",

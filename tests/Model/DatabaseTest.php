@@ -1,6 +1,7 @@
 <?php
 
 use FastD\Application;
+use FastD\Model\Database;
 
 /**
  * @author    jan huang <bboyjanhuang@gmail.com>
@@ -11,18 +12,18 @@ use FastD\Application;
  */
 class DatabaseTest extends \FastD\TestCase
 {
-    public function createApplication()
+    public function createApplication(): Application
     {
         $app = new Application(__DIR__.'/../../app');
 
         return $app;
     }
 
-    public function createDatabase()
+    public function createDatabase(): Database
     {
         $config = config()->get('database.default');
 
-        return new \FastD\Model\Database([
+        return new Database([
             'database_type' => isset($config['adapter']) ? $config['adapter'] : 'mysql',
             'database_name' => $config['name'],
             'server' => $config['host'],
@@ -34,14 +35,14 @@ class DatabaseTest extends \FastD\TestCase
         ]);
     }
 
-    public function testGoneAwayConnection()
+    public function testGoneAwayConnection(): void
     {
         $database = $this->createDatabase();
         $database->query('show tables;')->fetchAll();
         $this->assertTrue(true);
     }
 
-    public function testInsert()
+    public function testInsert(): void
     {
         database()->insert('hello', [
             'content' => 'hello world',

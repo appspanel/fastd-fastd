@@ -11,11 +11,11 @@ use PHPUnit\Framework\TestCase;
 
 class CachePoolTest extends TestCase
 {
-    public function testCacheConnection()
+    public function testCacheConnection(): void
     {
     }
 
-    public function testCachePool()
+    public function testCachePool(): void
     {
     }
 }

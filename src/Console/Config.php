@@ -37,7 +37,7 @@ class Config extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (($name = $input->getArgument('name'))) {
+        if ($name = $input->getArgument('name')) {
             if ('php' === pathinfo($name, PATHINFO_EXTENSION)) {
                 $file = app()->getPath().'/config/'.$name;
                 $config = load($file);

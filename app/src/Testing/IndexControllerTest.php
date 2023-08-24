@@ -11,12 +11,12 @@
 
     class IndexControllerTest extends TestCase
     {
-        public function createApplication()
+        public function createApplication(): Application
         {
             return new Application(__DIR__.'/../..');
         }
 
-        public function testSayHello()
+        public function testSayHello(): void
         {
             $response = $this->app->handleRequest($this->request('GET', '/'));
             $this->equalsJson($response, ['foo' => 'bar']);
@@ -26,14 +26,14 @@
             $this->equalsJson($response, ['foo' => 'bar']);
         }
 
-        public function testDb()
+        public function testDb(): void
         {
             $response = $this->app->handleRequest($this->request('GET', '/db'));
 
             $this->equalsStatus($response, 200);
         }
 
-        public function testHandleDynamicRequest()
+        public function testHandleDynamicRequest(): void
         {
             $response = $this->app->handleRequest($this->request('GET', '/foo/bar'));
             $this->equalsJson($response, ['foo' => 'bar']);
@@ -41,7 +41,7 @@
             $this->equalsJson($response, ['foo' => 'foobar']);
         }
 
-        public function testHandleMiddlewareRequest()
+        public function testHandleMiddlewareRequest(): void
         {
             $response = $this->app->handleRequest($this->request('POST', '/foo/bar'));
             $this->equalsJson($response, ['foo' => 'middleware']);
@@ -49,14 +49,14 @@
             $this->equalsJson($response, ['foo' => 'bar']);
         }
 
-        public function testModel()
+        public function testModel(): void
         {
             $response = $this->app->handleRequest($this->request('GET', '/model'));
             $this->assertEquals(200, $response->getStatusCode());
             $this->isSuccessful($response);
         }
 
-        public function testAuth()
+        public function testAuth(): void
         {
             $response = $this->app->handleRequest($this->request('GET', '/auth'));
 
@@ -66,10 +66,7 @@
                 'code' => 401,
             ]);
 
-            $response = $this->app->handleRequest($this->request('GET', 'http://foo:bar@127.0.0.1/auth', [
-                'PHP_AUTH_USER' => 'foo',
-                'PHP_AUTH_PW' => 'bar',
-            ]));
+            $response = $this->app->handleRequest($this->request('GET', 'http://foo:bar@127.0.0.1/auth'));
 
             $this->assertEquals(200, $response->getStatusCode());
             $this->equalsJson($response, [
