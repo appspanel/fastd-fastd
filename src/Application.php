@@ -10,7 +10,6 @@
 namespace FastD;
 
 use ErrorException;
-use Exception;
 use FastD\Config\Config;
 use FastD\Container\Container;
 use FastD\Container\ServiceProviderInterface;
@@ -110,7 +109,7 @@ class Application extends Container
             $config = load($this->path.'/config/app.php');
             $this->name = $config['name'];
 
-            date_default_timezone_set(isset($config['timezone']) ? $config['timezone'] : 'UTC');
+            date_default_timezone_set($config['timezone'] ?? 'UTC');
 
             $this->add('config', new Config($config));
             $this->add('logger', new Logger($this->name));
@@ -162,7 +161,7 @@ class Application extends Container
      * @return \FastD\Http\Response
      * @throws \Throwable
      */
-    public function handleRequest(ServerRequestInterface $request)
+    public function handleRequest(ServerRequestInterface $request): Response
     {
         try {
             $this->add('request', $request);
@@ -176,7 +175,7 @@ class Application extends Container
     /**
      * @param \FastD\Http\Response $response
      */
-    public function handleResponse(Response $response)
+    public function handleResponse(Response $response): void
     {
         $response->send();
     }
@@ -186,7 +185,7 @@ class Application extends Container
      * @return \FastD\Http\Response
      * @throws \Throwable
      */
-    public function handleException(Throwable $e)
+    public function handleException(Throwable $e): Response
     {
         try {
             $trace = call_user_func(config()->get('exception.log'), $e);
@@ -223,7 +222,7 @@ class Application extends Container
      * @param \Psr\Http\Message\ResponseInterface $response
      * @return int
      */
-    public function shutdown(ServerRequestInterface $request, ResponseInterface $response)
+    public function shutdown(ServerRequestInterface $request, ResponseInterface $response): int
     {
         $this->offsetUnset('request');
         $this->offsetUnset('response');
@@ -237,7 +236,7 @@ class Application extends Container
      * @return int
      * @throws \Throwable
      */
-    public function run()
+    public function run(): int
     {
         $request = ServerRequest::createServerRequestFromGlobals();
 

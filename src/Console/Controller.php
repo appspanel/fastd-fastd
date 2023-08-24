@@ -62,7 +62,6 @@ class Controller extends Command
 
 namespace Controller;
 
-
 use FastD\Http\Response;
 use FastD\Http\ServerRequest;
 

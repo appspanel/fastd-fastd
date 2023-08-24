@@ -9,6 +9,7 @@
 
 namespace FastD\Servitization\Server;
 
+use FastD\Http\Response;
 use FastD\Http\SwooleServerRequest;
 use FastD\Servitization\OnWorkerStart;
 use FastD\Swoole\Server\HTTP;
@@ -24,14 +25,13 @@ class HTTPServer extends HTTP
     use OnWorkerStart;
 
     /**
-     * @param \Swoole\Http\Request  $swooleRequet
+     * @param \Swoole\Http\Request $swooleRequest
      * @param \Swoole\Http\Response $swooleResponse
-     *
-     * @return int
+     * @throws \Throwable
      */
-    public function onRequest(SwooleRequest $swooleRequet, SwooleResponse $swooleResponse)
+    public function onRequest(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse): void
     {
-        $request = SwooleServerRequest::createServerRequestFromSwoole($swooleRequet);
+        $request = SwooleServerRequest::createServerRequestFromSwoole($swooleRequest);
 
         $response = $this->doRequest($request);
         foreach ($response->getHeaders() as $key => $header) {
@@ -52,18 +52,14 @@ class HTTPServer extends HTTP
         $swooleResponse->status($response->getStatusCode());
         $swooleResponse->end((string) $response->getBody());
         app()->shutdown($request, $response);
-
-        return 0;
     }
 
     /**
-     * @param ServerRequestInterface $serverRequest
-     *
+     * @param \Psr\Http\Message\ServerRequestInterface $serverRequest
      * @return \FastD\Http\Response
-     *
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function doRequest(ServerRequestInterface $serverRequest)
+    public function doRequest(ServerRequestInterface $serverRequest): Response
     {
         return app()->handleRequest($serverRequest);
     }

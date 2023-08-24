@@ -18,19 +18,19 @@ use LogicException;
 class DatabasePool implements PoolInterface
 {
     /**
-     * @var Database[]
+     * @var array<string,Database>
      */
     protected array $connections = [];
 
     /**
-     * @var array
+     * @var array<string,array<string,mixed>>
      */
     protected array $config;
 
     /**
      * Database constructor.
      *
-     * @param array $config
+     * @param array<string,array<string,mixed>> $config
      */
     public function __construct(array $config)
     {
@@ -38,11 +38,11 @@ class DatabasePool implements PoolInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @param bool $force
      * @return Database
      */
-    public function getConnection($key, bool $force = false): Database
+    public function getConnection(string $key, bool $force = false): Database
     {
         if ($force || !isset($this->connections[$key])) {
             if (!isset($this->config[$key])) {

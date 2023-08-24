@@ -11,7 +11,9 @@ namespace FastD;
 
 use FastD\ServiceProvider\SwooleServiceProvider;
 use FastD\Servitization\Server\HTTPServer;
+use FastD\Swoole\Server as FastDSwooleServer;
 use Symfony\Component\Console\Input\InputInterface;
+use Swoole\Server as SwooleServer;
 
 /**
  * Class App.
@@ -80,7 +82,7 @@ class Server
     /**
      * @return \Swoole\Server
      */
-    public function getSwoole()
+    public function getSwoole(): SwooleServer
     {
         return $this->server->getSwoole();
     }
@@ -88,7 +90,7 @@ class Server
     /**
      * @return Swoole\Server
      */
-    public function bootstrap()
+    public function bootstrap(): FastDSwooleServer
     {
         return $this->server->bootstrap();
     }
@@ -96,7 +98,7 @@ class Server
     /**
      * @return $this
      */
-    public function initListeners()
+    public function initListeners(): static
     {
         $listeners = config()->get('server.listeners', []);
         foreach ($listeners as $listener) {
@@ -113,7 +115,7 @@ class Server
     /**
      * @return $this
      */
-    public function initProcesses()
+    public function initProcesses(): static
     {
         $processes = config()->get('server.processes', []);
         foreach ($processes as $process) {
@@ -126,7 +128,7 @@ class Server
     /**
      * @return $this
      */
-    public function daemon()
+    public function daemon(): static
     {
         $this->server->daemon();
 
@@ -136,7 +138,7 @@ class Server
     /**
      * @return int
      */
-    public function start()
+    public function start(): int
     {
         return $this->server->start();
     }
@@ -144,7 +146,7 @@ class Server
     /**
      * @return int
      */
-    public function stop()
+    public function stop(): int
     {
         return $this->server->shutdown();
     }
@@ -152,7 +154,7 @@ class Server
     /**
      * @return int
      */
-    public function restart()
+    public function restart(): int
     {
         return $this->server->restart();
     }
@@ -160,7 +162,7 @@ class Server
     /**
      * @return int
      */
-    public function reload()
+    public function reload(): int
     {
         return $this->server->reload();
     }
@@ -168,25 +170,23 @@ class Server
     /**
      * @return int
      */
-    public function status()
+    public function status(): int
     {
         return $this->server->status();
     }
 
     /**
-     * @param array $dir
-     *
-     * @return int
+     * @param string[] $dir
      */
-    public function watch(array $dir = ['.'])
+    public function watch(array $dir = ['.']): void
     {
-        return $this->server->watch($dir);
+        $this->server->watch($dir);
     }
 
     /**
      * @param InputInterface $input
      */
-    public function run(InputInterface $input)
+    public function run(InputInterface $input): void
     {
         if ($input->hasParameterOption(['--daemon', '-d'], true)) {
             $this->daemon();

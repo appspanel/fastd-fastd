@@ -64,7 +64,6 @@ class Model extends Command
 
 namespace Model;
 
-
 use FastD\Model\Model;
 
 class {$name} extends Model

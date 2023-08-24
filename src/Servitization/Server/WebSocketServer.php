@@ -24,15 +24,13 @@ class WebSocketServer extends WebSocket
     use OnWorkerStart;
 
     /**
-     * @param \Swoole\Server          $server
+     * @param \Swoole\Server $server
      * @param \Swoole\WebSocket\Frame $frame
-     *
-     * @return int|mixed
-     *
-     * @throws \Exception
+     * @return int
      * @throws \FastD\Packet\Exceptions\PacketException
+     * @throws \Throwable
      */
-    public function doMessage(SwooleServer $server, SwooleFrame $frame)
+    public function doMessage(SwooleServer $server, SwooleFrame $frame): int
     {
         $data = $frame->data;
         $data = Json::decode($data);

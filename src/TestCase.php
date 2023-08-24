@@ -15,18 +15,19 @@ use PHPUnit_Extensions_Database_DataSet_ArrayDataSet;
 use PHPUnit_Extensions_Database_DataSet_CompositeDataSet;
 use PHPUnit_Extensions_Database_DataSet_IDataSet;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
 /**
  * Class TestCase.
  */
 class TestCase extends WebTestCase
 {
-    protected $connection = 'default';
+    protected string $connection = 'default';
 
     /**
      * @var Application
      */
-    protected $app;
+    protected Application $app;
 
     /**
      * Set up unit.
@@ -48,19 +49,19 @@ class TestCase extends WebTestCase
     /**
      * @return Application
      */
-    public function createApplication()
+    public function createApplication(): Application
     {
         return new Application(getcwd());
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param array                  $params
-     * @param array                  $headers
-     *
+     * @param array $params
+     * @param array $headers
      * @return Response
+     * @throws \Throwable
      */
-    public function handleRequest(ServerRequestInterface $request, array $params = [], array $headers = [])
+    public function handleRequest(ServerRequestInterface $request, array $params = [], array $headers = []): Response
     {
         if (!empty($params)) {
             if ('GET' === $request->getMethod()) {
@@ -90,7 +91,7 @@ class TestCase extends WebTestCase
     {
         try {
             return $this->createDefaultDBConnection(database($this->connection)->pdo);
-        } catch (\Exception $exception) {
+        } catch (Throwable) {
             return null;
         }
     }

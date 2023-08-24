@@ -24,15 +24,13 @@ class UDPServer extends UDP
 
     /**
      * @param \Swoole\Server $server
-     * @param $data
-     * @param $clientInfo
-     *
-     * @return int|mixed
-     *
-     * @throws \Exception
+     * @param string $data
+     * @param array $clientInfo
+     * @return int
      * @throws \FastD\Packet\Exceptions\PacketException
+     * @throws \Throwable
      */
-    public function doPacket(SwooleServer $server, $data, $clientInfo)
+    public function doPacket(SwooleServer $server, string $data, array $clientInfo): int
     {
         $data = Json::decode($data);
         $request = new ServerRequest($data['method'], $data['path']);

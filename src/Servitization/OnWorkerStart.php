@@ -9,9 +9,9 @@
 
 namespace FastD\Servitization;
 
-use Exception;
 use FastD\Pool\PoolInterface;
 use Swoole\Server as SwooleServer;
+use Throwable;
 
 /**
  * Trait OnWorkerStart.
@@ -20,11 +20,11 @@ trait OnWorkerStart
 {
     /**
      * @param \Swoole\Server $server
-     * @param int           $worker_id
+     * @param int $workerId
      */
-    public function onWorkerStart(SwooleServer $server, $worker_id)
+    public function onWorkerStart(SwooleServer $server, int $workerId): void
     {
-        parent::onWorkerStart($server, $worker_id);
+        parent::onWorkerStart($server, $workerId);
 
         try {
             app()->reboot();
@@ -34,7 +34,7 @@ trait OnWorkerStart
                     $service->initPool();
                 }
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             echo $e->getMessage().PHP_EOL;
         }
     }

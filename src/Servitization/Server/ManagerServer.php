@@ -20,23 +20,22 @@ class ManagerServer extends TCP
 {
     /**
      * @param \Swoole\Server $server
-     * @param $fd
-     * @param $from_id
+     * @param int $fd
+     * @param int $reactorId
      */
-    public function doConnect(SwooleServer $server, $fd, $from_id)
+    public function doConnect(SwooleServer $server, int $fd, int $reactorId): void
     {
         $server->send($fd, sprintf('server: %s %s', app()->getName(), Application::VERSION).PHP_EOL);
     }
 
     /**
      * @param \Swoole\Server $server
-     * @param $fd
-     * @param $data
-     * @param $from_id
-     *
+     * @param int $fd
+     * @param mixed $data
+     * @param int $reactorId
      * @return mixed
      */
-    public function doWork(SwooleServer $server, $fd, $data, $from_id)
+    public function doWork(SwooleServer $server, int $fd, mixed $data, int $reactorId): mixed
     {
         switch (trim($data)) {
             case 'quit':
@@ -61,5 +60,7 @@ class ManagerServer extends TCP
 
                 break;
         }
+
+        return null;
     }
 }

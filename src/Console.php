@@ -9,7 +9,6 @@
 
 namespace FastD;
 
-use Exception;
 use FastD\Console\Config;
 use FastD\Console\Controller;
 use FastD\Console\Migration;
@@ -18,6 +17,7 @@ use FastD\Console\Routing;
 use Symfony\Component\Console\Application as Symfony;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Class AppConsole.
@@ -91,7 +91,7 @@ EOF
 
         try {
             return parent::doRun($input, $output);
-        } catch (Exception $exception) {
+        } catch (Throwable $exception) {
             app()->handleException($exception);
         }
 

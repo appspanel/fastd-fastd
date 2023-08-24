@@ -9,12 +9,12 @@
 
 namespace FastD\Pool;
 
-use Exception;
 use LogicException;
 use ReflectionClass;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Throwable;
 
 /**
  * Class CachePool.
@@ -22,24 +22,24 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 class CachePool implements PoolInterface
 {
     /**
-     * @var AbstractAdapter[]
+     * @var array<string,AbstractAdapter>
      */
     protected array $caches = [];
 
     /**
-     * @var array
+     * @var array<string,array<string,mixed>>
      */
     protected array $config;
 
     /**
-     * @var array
+     * @var array<string,AbstractAdapter>
      */
     protected array $redises = [];
 
     /**
      * Cache constructor.
      *
-     * @param array $config
+     * @param array<string,array<string,mixed>> $config
      */
     public function __construct(array $config)
     {
@@ -47,11 +47,11 @@ class CachePool implements PoolInterface
     }
 
     /**
-     * @param $key
-     * @return AbstractAdapter|FilesystemAdapter|RedisAdapter
+     * @param string $key
+     * @return AbstractAdapter
      * @throws \ReflectionException
      */
-    protected function connect($key)
+    protected function connect(string $key): AbstractAdapter
     {
         if (!isset($this->config[$key])) {
             throw new LogicException(sprintf('No set %s cache', $key));
@@ -69,11 +69,11 @@ class CachePool implements PoolInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return AbstractAdapter
      * @throws \ReflectionException
      */
-    public function getCache($key)
+    public function getCache(string $key): AbstractAdapter
     {
         if (!isset($this->caches[$key])) {
             $this->caches[$key] = $this->connect($key);
@@ -103,19 +103,20 @@ class CachePool implements PoolInterface
 
     /**
      * @param array $config
-     * @return FilesystemAdapter|RedisAdapter
+     * @param string $key
+     * @return AbstractAdapter
      */
-    protected function getRedisAdapter(array $config, $key)
+    protected function getRedisAdapter(array $config, string $key): AbstractAdapter
     {
         $connect = null;
         try {
             $connect = RedisAdapter::createConnection($config['params']['dsn']);
             $cache = new $config['adapter'](
                 $connect,
-                isset($config['params']['namespace']) ? $config['params']['namespace'] : '',
-                isset($config['params']['lifetime']) ? $config['params']['lifetime'] : ''
+                $config['params']['namespace'] ?? '',
+                $config['params']['lifetime'] ?? ''
             );
-        } catch (Exception $e) {
+        } catch (Throwable) {
             $cache = new FilesystemAdapter('', 0, '/tmp/cache');
         }
 
@@ -131,12 +132,12 @@ class CachePool implements PoolInterface
      * @param array $config
      * @return AbstractAdapter
      */
-    protected function getAdapter(array $config)
+    protected function getAdapter(array $config): AbstractAdapter
     {
         return new $config['adapter'](
-            isset($config['params']['namespace']) ? $config['params']['namespace'] : '',
-            isset($config['params']['lifetime']) ? $config['params']['lifetime'] : '',
-            isset($config['params']['directory']) ? $config['params']['directory'] : app()->getPath().'/runtime/cache'
+            $config['params']['namespace'] ?? '',
+            $config['params']['lifetime'] ?? '',
+            $config['params']['directory'] ?? app()->getPath().'/runtime/cache'
         );
     }
 }

@@ -10,6 +10,7 @@
 namespace FastD\Console;
 
 use FastD\Utils\FileObject;
+use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -44,7 +45,7 @@ class Config extends Command
             } else {
                 $config = config()->get($name, null);
                 if (null === $config) {
-                    throw new \LogicException(sprintf('Config "%s" is not configure.', $name));
+                    throw new LogicException(sprintf('Config "%s" is not configure.', $name));
                 }
 
                 $config = [$name => $config];

@@ -24,16 +24,14 @@ class TCPServer extends TCP
 
     /**
      * @param \Swoole\Server $server
-     * @param $fd
-     * @param $data
-     * @param $from_id
-     *
-     * @return int|mixed
-     *
-     * @throws \Exception
+     * @param int $fd
+     * @param mixed $data
+     * @param int $reactorId
+     * @return int
      * @throws \FastD\Packet\Exceptions\PacketException
+     * @throws \Throwable
      */
-    public function doWork(SwooleServer $server, $fd, $data, $from_id)
+    public function doWork(SwooleServer $server, int $fd, mixed $data, int $reactorId): int
     {
         if ('quit' === $data) {
             $server->close($fd);
